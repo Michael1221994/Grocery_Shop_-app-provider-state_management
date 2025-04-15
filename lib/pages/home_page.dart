@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery_shop_app/components/grocery_item_tile.dart';
 import 'package:grocery_shop_app/model/cart_model.dart';
+import 'package:grocery_shop_app/pages/cart_page.dart';
 import 'package:provider/provider.dart';
 
 
@@ -11,6 +12,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage())),
+        child: const Icon(Icons.shopping_cart, color: Colors.white,),),
       body: SafeArea(
         child: Column(
           children: [
@@ -63,18 +68,25 @@ class HomePage extends StatelessWidget {
         Expanded(
           child: Consumer<CartModel>(
             builder: (context, value, child) {
-              return  GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              return  GridView.builder(  // gridview ??
+                itemCount: value.shopItems.length,
+                padding: EdgeInsets.all(12),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1 /1.3, //HERE!! WAGWAN
+                ),
               itemBuilder: (context, index){
                 return  GroceryItemTile(
                   itemname: value.shopItems[index][0],
                   itemprice: value.shopItems[index][1],
                   imagepath: value.shopItems[index][2],
                   color: value.shopItems[index][3],
-                  
+                  onPressed: () =>
+                    Provider.of<CartModel>(context, listen: false).addItemToCart(index)
+                  ,
                 );
               
-             }
+             } 
               );
             },
             
